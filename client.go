@@ -204,13 +204,14 @@ func injectClient(a *auth, customHttpClient *http.Client) *Client {
 	c.Teams = &Teams{c: c}
 	c.Workspaces = &Workspace{c: c, Repositories: c.Repositories, Permissions: &Permission{c: c}}
 	c.Addons = &Addons{c: c}
+	c.IsCustomHttpClient = customHttpClient != nil
 
-	if customHttpClient != nil {
+	if c.IsCustomHttpClient {
 		c.HttpClient = customHttpClient
-	} else {
-		c.HttpClient = new(http.Client)
+		return c
 	}
 
+	c.HttpClient = new(http.Client)
 	return c
 }
 
